@@ -1,3 +1,12 @@
+#include <stdio.h>
+#include <stddef.h>
+#include <stdint.h>
+
+#include "platform.h"
+
+#include "util.h"
+#include "net.h"
+
 static struct net_device *devices;
 
 struct net_device *
@@ -16,7 +25,7 @@ int net_device_register(struct net_device *dev){
 	static unsigned int index = 0;
 
 	dev->index = index++;
-	snprintf(dev->name, sizeof(def->name), "net%d", dev->index);
+	snprintf(dev->name, sizeof(dev->name), "net%d", dev->index);
 	dev->next = devices;
 	devices = dev;
 	infof("resudterd, dev=%s, type=0x%04x", dev->name, dev->type);
@@ -56,7 +65,7 @@ static int net_device_close(struct net_device *dev){
 }
 
 int net_device_output(struct net_device *dev, uint16_t type, const uint8_t *data, size_t len, const void *dst){
-	if(!NET_DEVICEd_IS_UP(dev)){
+	if(!NET_DEVICE_IS_UP(dev)){
 		errorf("not opened, dev=%s", dev->name);
 		return -1;
 	}
