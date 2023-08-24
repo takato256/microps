@@ -62,7 +62,7 @@ loopback_isr(unsigned int irq, void *id)
 	struct net_device *dev;
 	struct loopback_queue_entry *entry;
 
-	dev = (struct met_device *)id;
+	dev = (struct net_device *)id;
 	mutex_lock(&PRIV(dev)->mutex);
 	while(1){
 		entry = queue_pop(&PRIV(dev)->queue);
@@ -88,6 +88,18 @@ loopback_init(void)
 	struct net_device *dev;
 	struct loopback *lo;
 
+	dev = net_device_alloc();
+	if(!dev){
+		errorf("net_device_alloc() failure");
+		return NULL;
+	}
+	dev->type = NET_DEVICE_TYPE_LOOPBACK;
+	dev->mtu = LOOPBACK_MTU;
+	dev->hlen = 0;
+	dev->alen = 0;
+	dev->ops = &loopback_ops;
+	dev->flags = NET_DEVICE_FLAG_LOOPBACK;
+
 	lo = memory_alloc(sizeof(*lo));
 	if(!lo){
 		errorf("memory_alloc() failure");
@@ -97,6 +109,12 @@ loopback_init(void)
 	mutex_init(&lo->mutex);
 	queue_init(&lo->queue);
 	dev->priv = lo;
+	
+	if(net_device_register(dev) == -1){
+		debugf("bet_device_register() failure");
+		return NULL;
+	}
+	intr_request_irq(LOOPBACK_IRQ, loopback_isr, INTR_IRQ_SHARED, dev->name, dev);
 
 	debugf("initialized, dev=%s", dev->name);
 	return dev;
