@@ -105,7 +105,7 @@ ip_input(const uint8_t *data, size_t len, struct net_device *dev)
 
 	v = (hdr->vhl & 0xf0) >> 4;
 	if (v != IP_VERSION_IPV4){
-		errorf("version mismatch");
+		errorf("version is wrong");
 		return;
 	}
 	hlen = (hdr->vhl & 0x0f) << 2;
