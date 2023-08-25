@@ -167,7 +167,7 @@ ip_input(const uint8_t *data, size_t len, struct net_device *dev)
 	struct ip_hdr *hdr;
 	uint8_t v;
 	uint16_t hlen, total, offset;
-	struct ip_iface iface;
+	struct ip_iface *iface;
 	char addr[IP_ADDR_STR_LEN];
 
 	if(len < IP_HDR_SIZE_MIN){
