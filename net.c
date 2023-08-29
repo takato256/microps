@@ -372,5 +372,10 @@ net_init(void)
 		return -1;
 	}
 
+	if (tcp_init() == -1){
+		errorf("tcp_init() failure");
+		return -1;
+	}
+
     	return 0;
 }
