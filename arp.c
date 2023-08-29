@@ -299,16 +299,16 @@ arp_resolve(struct net_iface *iface, ip_addr_t pa, uint8_t *ha)
 	cache = arp_cache_select(pa);
 
 	if (!cache){
-		cache = memory_alloc(sizeof(*cache));
+		cache = arp_cache_alloc();
 		if (!cache){
-			errorf("memory_alloc() faliure");
+			mutex_unlock(&mutex);
+			errorf("arp_cache_alloc() faliure");
 			return ARP_RESOLVE_ERROR;
 		}
 
-		cache->state = ARP_CACHE_STATE_INCOMPLETE;
+		cache->state = ARP_RESOLVE_INCOMPLETE;
 		cache->pa = pa;
 		gettimeofday(&cache->timestamp, NULL);
-		arp_request(iface, pa);
 
 		mutex_unlock(&mutex);
 		arp_request(iface, pa);
