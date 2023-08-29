@@ -154,8 +154,8 @@ arp_cache_update(ip_addr_t pa, const uint8_t *ha)
 		return NULL;
 	}
 
-	memcpy(cache->ha, ha, ETHER_ADDR_LEN);
 	cache->state = ARP_CACHE_STATE_RESOLVED;
+	memcpy(cache->ha, ha, ETHER_ADDR_LEN);
 	gettimeofday(&cache->timestamp, NULL);
 
 	debugf("UPDATE: pa=%s, ha=%s", ip_addr_ntop(pa, addr1, sizeof(addr1)), ether_addr_ntop(ha, addr2, sizeof(addr2)));
