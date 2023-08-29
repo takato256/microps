@@ -319,7 +319,12 @@ net_init(void)
     	infof("initialized");
 
 	if (icmp_init() == -1){
-		errorf("icmp_init() failed");
+		errorf("icmp_init() failure");
+		return -1;
+	}
+
+	if (udp_init() == -1){
+		errorf("udp_init() failure");
 		return -1;
 	}
 
