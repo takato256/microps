@@ -216,7 +216,7 @@ udp_input(const uint8_t *data, size_t len, ip_addr_t src, ip_addr_t dst, struct 
 	entry->foreign.addr = src;
 	entry->foreign.port = hdr->src;
 	entry->len = len - sizeof(*hdr);
-	memcpy(entry + 1, hdr + 1, entry->len);
+	memcpy(entry->data, hdr + 1, entry->len);
 
 	if(!queue_push(&pcb->queue, entry)){
 		mutex_unlock(&mutex);
